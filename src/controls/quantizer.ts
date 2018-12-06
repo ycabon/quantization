@@ -1,6 +1,6 @@
 import Promise from "@dojo/shim/Promise";
 import { quantize, cleanup, QuantizationResult } from "../data/quantize";
-import { FeatureSet, Extent } from "../data/arcgis";
+import { FeatureSet, Extent, Polygon, Feature } from "../data/arcgis";
 
 import draw from "./support/draw";
 
@@ -49,7 +49,7 @@ class Quantizer {
         promise = cleanup(featureSet);
       }
       else {
-        const vertexCount = featureSet.features.reduce((count, feature) => {
+        const vertexCount = (featureSet.features as Feature<Polygon>[]).reduce((count, feature) => {
           return count + feature.geometry.rings.reduce((count, ring) => {
             return count + ring.length;
           }, 0);

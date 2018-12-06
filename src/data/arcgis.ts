@@ -8,8 +8,11 @@ export interface Extent {
 export interface Polygon {
   rings: number[][][];
 }
+export interface Polyline {
+  paths: number[][][];
+}
 
-export type Geometry = Polygon | Extent;
+export type Geometry = Extent | Polygon | Polyline;
 
 export interface Feature<G = Geometry> {
   geometry: G;
@@ -28,4 +31,9 @@ export interface PolygonFeatureSet extends FeatureSetBase {
   features: Feature<Polygon>[];
 }
 
-export type FeatureSet = PolygonFeatureSet;
+export interface PolylineFeatureSet extends FeatureSetBase {
+  geometryType: "esriGeometryPolyline";
+  features: Feature<Polyline>[];
+}
+
+export type FeatureSet = PolygonFeatureSet | PolylineFeatureSet;

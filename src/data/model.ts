@@ -26,12 +26,14 @@ export function query(scale?: number) {
     })
   };
 
-  return xhr("https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/World_Countries_(Generalized)/FeatureServer/0/query", {
+  return xhr("http://services.arcgis.com/BG6nSlhZSAWtExvp/arcgis/rest/services/EnergyUse_countries/FeatureServer/0/query", {
     query: {
       f: "json",
       where: "1=1",
       ...quantizationParameters,
-      outFields: "FID"
+      outSR: "102100",
+      resultType: "tile",
+      maxRecordCountFactor: "5"
     },
     includeRequestedWithHeader: false
   })
