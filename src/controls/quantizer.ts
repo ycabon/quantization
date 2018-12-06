@@ -1,6 +1,6 @@
 import Promise from "@dojo/shim/Promise";
 import { quantize, cleanup, QuantizationResult } from "../data/quantize";
-import { FeatureSet, Extent, Polygon, Feature } from "../data/arcgis";
+import { FeatureSet, Extent } from "../data/arcgis";
 
 import draw from "./support/draw";
 
@@ -48,8 +48,8 @@ class Quantizer {
       if (removeCollinearVertices) {
         promise = cleanup(featureSet);
       }
-      else {
-        const vertexCount = (featureSet.features as Feature<Polygon>[]).reduce((count, feature) => {
+      else if (featureSet.geometryType === "esriGeometryPolygon") {
+        const vertexCount = featureSet.features.reduce((count, feature) => {
           return count + feature.geometry.rings.reduce((count, ring) => {
             return count + ring.length;
           }, 0);
@@ -61,6 +61,19 @@ class Quantizer {
             outputFeatureCount: featureSet.features.length,
             inputVertexCount: vertexCount,
             outputVertexCount: vertexCount,
+            collinearVertextCount: 0,
+            time: 0
+          },
+          featureSet
+        });
+      }
+      else if (featureSet.geometryType === "esriGeometryPoint") {
+        promise = Promise.resolve<QuantizationResult>({
+          statistics: {
+            inputFeatureCount: featureSet.features.length,
+            outputFeatureCount: featureSet.features.length,
+            inputVertexCount: NaN,
+            outputVertexCount: NaN,
             collinearVertextCount: 0,
             time: 0
           },
@@ -80,7 +93,12 @@ class Quantizer {
       const { featureSet, statistics } = results;
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
-      context.fillStyle = "rgb(245,245,245)";
+      if (featureSet.geometryType === "esriGeometryPoint") {
+        context.fillStyle = "black";
+      }
+      else {
+        context.fillStyle = "rgb(245,245,245)";
+      }
       context.lineWidth = 1;
 
       draw(context, featureSet, {
@@ -96,8 +114,8 @@ class Quantizer {
       <hr />
       <div><span class="label">input features: </span><span class="value">${statistics.inputFeatureCount}</span></div>
       <div><span class="label">output features: </span><span class="value">${statistics.outputFeatureCount}</span></div>
-      <div><span class="label">input vertices: </span><span class="value">${statistics.inputVertexCount}</span></div>
-      <div><span class="label">output vertices: </span><span class="value">${statistics.outputVertexCount}</span></div>
+      <div><span class="label">input vertices: </span><span class="value">${isNaN(statistics.inputVertexCount) ? "N/A" : statistics.inputVertexCount}</span></div>
+      <div><span class="label">output vertices: </span><span class="value">${isNaN(statistics.outputVertexCount) ? "N/A" : statistics.outputVertexCount}</span></div>
       <div><span class="label">collinear vertices removed: </span><span class="value">${ removeCollinearVertices ? statistics.collinearVertextCount : "-"}</span></div>
       <div><span class="label">percent removed: </span><span class="value">${Math.round(100 - statistics.outputVertexCount / statistics.inputVertexCount * 100)}%</span></div>
       <div><span class="label">time: </span><span class="value">${statistics.time}ms</span></div>
