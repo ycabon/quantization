@@ -26,7 +26,7 @@ export function query(scale?: number) {
     })
   };
 
-  return xhr("http://services.arcgis.com/BG6nSlhZSAWtExvp/arcgis/rest/services/EnergyUse_countries/FeatureServer/0/query", {
+  return xhr("https://services.arcgis.com/BG6nSlhZSAWtExvp/arcgis/rest/services/EnergyUse_countries/FeatureServer/0/query", {
     query: {
       f: "json",
       where: "1=1",
