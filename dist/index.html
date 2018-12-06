@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title></title>
+<link href="main.css" rel="stylesheet"></head>
+
+<style>
+  body,
+  html {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .application {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    background: rgb(78, 78, 78);
+  }
+
+  .quantizer {
+    padding: 12px;
+    margin: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.78);
+    background: white;
+
+    display: flex;
+    flex-direction: column;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+  }
+
+  .quantizer>canvas {
+    width: 512px;
+    height: 512px;
+    border: 1px solid gray;
+    box-sizing: border-box;
+  }
+
+  .quantizer .statistics {
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .quantizer .statistics .title .value {
+    font-weight: bold;
+  }
+
+  .quantizer .statistics .title .mode {
+    color: white;
+    padding: 2px;
+  }
+
+  .quantizer[data-mode="client"] .statistics .title .mode {
+    background: red;
+  }
+  .quantizer[data-mode="server"] .statistics .title .mode {
+    background: green;
+  }
+
+  .quantizer .statistics .value {
+    font-weight: bold;
+  }
+
+  .quantizer .statistics hr {
+    border-top: 1px solid #D1D1D1;
+    border-bottom: none;
+    width: 100%;
+  }
+</style>
+
+<body>
+  <div class="application">
+    <div class="quantizer" data-scale="1" data-mode="server"></div>
+    <div class="quantizer" data-scale="1" data-mode="server" data-remove-collinear-vertices="true"></div>
+    <div class="quantizer" data-scale="1" data-mode="client"></div>
+    <div class="quantizer" data-scale="1" data-mode="client" data-remove-collinear-vertices="true"></div>
+    
+    <div class="quantizer" data-scale="2" data-mode="server"></div>
+    <div class="quantizer" data-scale="2" data-mode="server" data-remove-collinear-vertices="true"></div>
+    <div class="quantizer" data-scale="2" data-mode="client"></div>
+    <div class="quantizer" data-scale="2" data-mode="client" data-remove-collinear-vertices="true"></div>
+    
+    <div class="quantizer" data-scale="4" data-mode="server"></div>
+    <div class="quantizer" data-scale="4" data-mode="server" data-remove-collinear-vertices="true"></div>
+    <div class="quantizer" data-scale="4" data-mode="client"></div>
+    <div class="quantizer" data-scale="4" data-mode="client" data-remove-collinear-vertices="true"></div>
+    
+    <div class="quantizer" data-scale="8" data-mode="server"></div>
+    <div class="quantizer" data-scale="8" data-mode="server" data-remove-collinear-vertices="true"></div>
+    <div class="quantizer" data-scale="8" data-mode="client"></div>
+    <div class="quantizer" data-scale="8" data-mode="client" data-remove-collinear-vertices="true"></div>
+    
+    <div class="quantizer" data-scale="16" data-mode="server"></div>
+    <div class="quantizer" data-scale="16" data-mode="server" data-remove-collinear-vertices="true"></div>
+    <div class="quantizer" data-scale="16" data-mode="client"></div>
+    <div class="quantizer" data-scale="16" data-mode="client" data-remove-collinear-vertices="true"></div>
+    
+    <div class="quantizer" data-scale="32" data-mode="server"></div>
+    <div class="quantizer" data-scale="32" data-mode="server" data-remove-collinear-vertices="true"></div>
+    <div class="quantizer" data-scale="32" data-mode="client"></div>
+    <div class="quantizer" data-scale="32" data-mode="client" data-remove-collinear-vertices="true"></div>
+  </div>
+
+  <!-- Main -->
+  <script src="./dist/bundle.js"></script>
+<script type="text/javascript" src="src/main.js"></script></body>
+
+</html>
