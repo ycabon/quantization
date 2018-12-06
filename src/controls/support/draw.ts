@@ -58,6 +58,6 @@ function drawPoints(context: CanvasRenderingContext2D, featureSet: PointFeatureS
   const {scale} = options;
 
   for (let { geometry: { x, y } } of features) {
-    context.fillRect(x * scale, y * scale, 1, 1);
+    context.fillRect(x * scale, y * scale, 2, 2);
   }
 }
