@@ -1,4 +1,4 @@
-import { FeatureSet, PolygonFeatureSet } from "../../data/arcgis";
+import { FeatureSet, PolygonFeatureSet, PointFeatureSet } from "../../data/arcgis";
 
 export interface Options {
   scale: number;
@@ -10,6 +10,9 @@ export default function draw(context: CanvasRenderingContext2D, featureSet: Feat
   switch (featureSet.geometryType) {
     case "esriGeometryPolygon":
       drawPolygons(context, featureSet, options);
+      break;
+    case "esriGeometryPoint":
+      drawPoints(context, featureSet, options);
       break;
     default:
       return;
@@ -46,5 +49,15 @@ function drawPolygons(context: CanvasRenderingContext2D, featureSet: PolygonFeat
     if (options.fill) {
       context.fill();
     }
+  }
+}
+
+
+function drawPoints(context: CanvasRenderingContext2D, featureSet: PointFeatureSet, options: Options): void {
+  const {features} = featureSet;
+  const {scale} = options;
+
+  for (let { geometry: { x, y } } of features) {
+    context.fillRect(x * scale, y * scale, 1, 1);
   }
 }

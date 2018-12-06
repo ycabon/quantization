@@ -1,5 +1,5 @@
 import Task from "@dojo/core/async/Task";
-import { FeatureSet, PolygonFeatureSet, Extent, Polygon } from "./arcgis";
+import { FeatureSet, PolygonFeatureSet, Extent, Polygon, PointFeatureSet, Point } from "./arcgis";
 
 export interface QuantizationParameters {
   tolerance: number;
@@ -40,6 +40,9 @@ export function quantize(featureSet: FeatureSet, quantizationParameters: Quantiz
     };
 
     switch (featureSet.geometryType) {
+      case "esriGeometryPoint":
+        results.featureSet = quantizePointFeatureSet(featureSet, quantizationParameters, statistics);
+        break;
       case "esriGeometryPolygon":
         results.featureSet = quantizePolygonFeatureSet(featureSet, quantizationParameters, statistics);
         break;
@@ -50,6 +53,33 @@ export function quantize(featureSet: FeatureSet, quantizationParameters: Quantiz
 
     resolve(results);
   });
+}
+
+function quantizePointFeatureSet(featureSet: PointFeatureSet, quantizationParameters: QuantizationParameters, statistics: QuantizationStatistics): PointFeatureSet {
+  const output: PointFeatureSet = {
+    geometryType: "esriGeometryPoint",
+    features: [],
+    transform: {
+      originPosition: "upperLeft",
+      scale: [quantizationParameters.tolerance, quantizationParameters.tolerance],
+      translate: [
+        quantizationParameters.extent.xmin,
+        quantizationParameters.extent.ymax
+      ]
+    }
+  };
+
+  for (const feature of featureSet.features) {
+    const quantized = quantizePoint(feature.geometry, quantizationParameters, statistics);
+
+    if (quantized) {
+      output.features.push({
+        geometry: quantized
+      });
+    }
+  }
+
+  return output;
 }
 
 function quantizePolygonFeatureSet(featureSet: PolygonFeatureSet, quantizationParameters: QuantizationParameters, statistics: QuantizationStatistics): PolygonFeatureSet {
@@ -77,6 +107,17 @@ function quantizePolygonFeatureSet(featureSet: PolygonFeatureSet, quantizationPa
   }
 
   return output;
+}
+
+function quantizePoint(geometry: Point, quantizationParameters: QuantizationParameters, statistics: QuantizationStatistics): Point {
+  const tx = quantizationParameters.extent.xmin;
+  const ty = quantizationParameters.extent.ymax;
+  const s = quantizationParameters.tolerance;
+
+  return {
+    x: Math.floor((geometry.x - tx) / s),
+    y: Math.floor((ty - geometry.y) / s)
+  };
 }
 
 function quantizePolygon(geometry: Polygon, quantizationParameters: QuantizationParameters, statistics: QuantizationStatistics): Polygon | null {
@@ -161,6 +202,9 @@ export function cleanup(featureSet: FeatureSet): Task<QuantizationResult> {
     switch (featureSet.geometryType) {
       case "esriGeometryPolygon":
         results.featureSet = cleanupPolygonFeatureSet(featureSet, statistics);
+        break;
+      default:
+        results.featureSet = featureSet;
         break;
     }
 
