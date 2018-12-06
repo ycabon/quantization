@@ -6,6 +6,22 @@ interface Model {
   featureSet: FeatureSet;
 }
 
+function getUrlParams(search: string): { [key: string]: string } {
+  let hashes = search.slice(search.indexOf('?') + 1).split('&');
+  let params: { [key: string]: string } = {};
+
+  hashes.map((hash) => {
+    let [key, val] = hash.split('=');
+    params[key] = decodeURIComponent(val);
+  })
+
+  return params;
+}
+
+const {
+  serviceUrl = "https://services.arcgis.com/BG6nSlhZSAWtExvp/arcgis/rest/services/EnergyUse_countries/FeatureServer/0"
+} = getUrlParams(window.location.search);
+
 export function query(scale?: number) {
   const extent = {
     xmin: -20037508.342787,
@@ -26,7 +42,7 @@ export function query(scale?: number) {
     })
   };
 
-  return xhr("http://services.arcgis.com/BG6nSlhZSAWtExvp/arcgis/rest/services/EnergyUse_countries/FeatureServer/0/query", {
+  return xhr(serviceUrl + "/query", {
     query: {
       f: "json",
       where: "1=1",
