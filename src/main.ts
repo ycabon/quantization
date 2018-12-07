@@ -21,5 +21,8 @@ for (let i = 0; i < items.length; i++) {
       removeCollinearVertices,
       isClientSide
     });
+  })
+  .catch(error => {
+    console.error(error);
   });
 }
