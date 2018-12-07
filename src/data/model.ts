@@ -56,7 +56,7 @@ export function query(scale?: number) {
   .then(response => response.json<FeatureSet>())
   .then(featureSet => {
     if (quantizationParameters.quantizationParameters && !featureSet.transform) {
-      throw new Error("invalid server-side quantization - missing tranform");
+      throw new Error("invalid server-side quantization - missing tranform in featureset");
     }
 
     return {
