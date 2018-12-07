@@ -115,8 +115,8 @@ function quantizePoint(geometry: Point, quantizationParameters: QuantizationPara
   const s = quantizationParameters.tolerance;
 
   return {
-    x: Math.floor((geometry.x - tx) / s),
-    y: Math.floor((ty - geometry.y) / s)
+    x: Math.round((geometry.x - tx) / s),
+    y: Math.round((ty - geometry.y) / s)
   };
 }
 
@@ -132,8 +132,8 @@ function quantizePolygon(geometry: Polygon, quantizationParameters: Quantization
     statistics.inputVertexCount += ring.length;
 
     newRing[0] = [
-      Math.floor((ring[0][0] - tx) / s),
-      Math.floor((ty - ring[0][1]) / s)
+      Math.round((ring[0][0] - tx) / s),
+      Math.round((ty - ring[0][1]) / s)
     ];
     let iNewRing = 1;
 
