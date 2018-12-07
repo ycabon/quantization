@@ -33,7 +33,7 @@ export function query(scale?: number) {
       wkid: 102100
     }
   };
-  const quantizationParameters = scale == null ? {} : {
+  const quantizationParameters: { quantizationParameters?: string } = scale == null ? {} : {
     quantizationParameters: JSON.stringify({
       mode: "view",
       originPosition: "upperLeft",
